@@ -25,6 +25,9 @@
 ### Asymmetry — Google과 Anthropic 경로는 대칭이 아니다
 Google 호출은 `GOOGLE_MODELS` 배열(`server/index.ts:5`)과 `withModelFallback`(`server/index.ts:134-136`)로 다중 모델 폴백을 갖지만, Anthropic은 단일 모델을 폴백 없이 직접 호출한다(`server/index.ts:68-96`, `callAnthropic`은 `withModelFallback`을 쓰지 않음). 두 프로바이더가 동일한 견고성을 가진다고 가정하지 마라. Anthropic에 폴백을 추가하려면 `withModelFallback`(`server/fallback.ts`) 패턴을 재사용하라.
 
+### Sensitive File Lockout — `.env`·credential·secret 파일은 에이전트가 절대 읽거나 수정하지 않는다
+`.claude/settings.json`의 `permissions.deny`가 `.env`/`.env.*`(루트 및 하위 전체)와 파일·디렉토리명에 `credential` 또는 `secret`이 포함된 모든 경로에 대해 `Read`/`Edit` 도구 사용을 차단한다. 이 프로젝트는 서버 `.env`에 Anthropic/Google API 키(`server/index.ts`의 `ENV_KEYS`)를 저장하므로, 디버깅이나 설정 확인이 필요해도 해당 파일을 직접 열거나 내용을 출력하지 마라 — `GET /api/config`가 제공하는 boolean 존재 여부(`envKeys`)만으로 확인하라. 새 민감 파일 패턴(예: `*.pem`, `*.key`)이 생기면 `.claude/settings.json`의 deny 목록에 먼저 추가하라.
+
 ### Test Boundary — 서버 로직은 순수 함수로 분리해야 테스트가 가능하다
 `server/generator.ts:1-2`의 주석대로 "부수효과(Bun.serve 등)가 없어 단위 테스트가 가능하다" — 실제로 `generator.ts`와 `fallback.ts`는 각각 `generator.test.ts`/`fallback.test.ts`로 테스트되지만, `Bun.serve` 핸들러가 있는 `server/index.ts`는 테스트가 전혀 없다. `src` 쪽도 동일한 패턴이다: `PromptInput.test.tsx`만 존재하고 `LivePreview.tsx`, `CodeView.tsx`, `ComponentCard.tsx`, `useComponentGenerator.ts`, `App.tsx`는 테스트가 없다. 새 로직을 추가할 때 가능하면 부수효과 없는 순수 함수로 뽑아 `generator.ts`/`fallback.ts` 같은 파일에 두고 테스트를 추가하라. `index.ts`의 `fetch` 핸들러에 비즈니스 로직을 직접 쌓지 마라.
 
