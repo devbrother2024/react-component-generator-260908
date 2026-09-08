@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { validatePromptLength } from '../utils/promptValidation';
+import { PROMPT_MAX_LENGTH, validatePromptLength } from '../utils/promptValidation';
 
 interface PromptInputProps {
   onGenerate: (prompt: string) => void;
@@ -38,18 +38,23 @@ export function PromptInput({ onGenerate, isLoading, history = [] }: PromptInput
         <h2>무엇을 만들까요?</h2>
       </div>
       <form onSubmit={handleSubmit} className="prompt-form">
-        <textarea
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          placeholder="예: 고객 목록 테이블 위에 들어갈 검색 필터 바를 만들어줘. 상태, 담당자, 날짜 범위 필터가 필요해."
-          className="prompt-textarea"
-          rows={3}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-              handleSubmit(e);
-            }
-          }}
-        />
+        <div className="prompt-textarea-wrap">
+          <textarea
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            placeholder="예: 고객 목록 테이블 위에 들어갈 검색 필터 바를 만들어줘. 상태, 담당자, 날짜 범위 필터가 필요해."
+            className="prompt-textarea"
+            rows={3}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                handleSubmit(e);
+              }
+            }}
+          />
+          <span className="prompt-counter">
+            {prompt.length}/{PROMPT_MAX_LENGTH}
+          </span>
+        </div>
         {!validation.valid && (
           <p className="prompt-error" role="alert">
             {validation.message}
