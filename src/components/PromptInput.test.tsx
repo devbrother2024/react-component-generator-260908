@@ -26,4 +26,17 @@ describe('PromptInput', () => {
     render(<PromptInput onGenerate={vi.fn()} isLoading={true} />);
     expect(screen.getByRole('button', { name: '생성 중...' })).toBeDisabled();
   });
+
+  it('500자를 초과하면 생성 버튼이 비활성화되고 에러 메시지가 표시된다', async () => {
+    const user = userEvent.setup();
+    render(<PromptInput onGenerate={vi.fn()} isLoading={false} />);
+
+    await user.click(screen.getByRole('textbox'));
+    await user.paste('a'.repeat(501));
+
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      '프롬프트는 500자를 초과할 수 없습니다.',
+    );
+    expect(screen.getByRole('button', { name: '컴포넌트 생성' })).toBeDisabled();
+  });
 });
