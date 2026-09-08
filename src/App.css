@@ -285,6 +285,18 @@
   color: var(--text-soft);
 }
 
+.prompt-textarea-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.prompt-counter {
+  align-self: flex-end;
+  font-size: 0.78rem;
+  color: var(--text-soft);
+}
+
 .prompt-error {
   grid-column: 1 / -1;
   margin: -4px 0 0;

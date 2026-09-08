@@ -27,6 +27,16 @@ describe('PromptInput', () => {
     expect(screen.getByRole('button', { name: '생성 중...' })).toBeDisabled();
   });
 
+  it('입력한 글자 수와 최대 글자 수를 카운터로 보여준다', async () => {
+    const user = userEvent.setup();
+    render(<PromptInput onGenerate={vi.fn()} isLoading={false} />);
+
+    expect(screen.getByText('0/500')).toBeInTheDocument();
+
+    await user.type(screen.getByRole('textbox'), '프로필 카드');
+    expect(screen.getByText('6/500')).toBeInTheDocument();
+  });
+
   it('500자를 초과하면 생성 버튼이 비활성화되고 에러 메시지가 표시된다', async () => {
     const user = userEvent.setup();
     render(<PromptInput onGenerate={vi.fn()} isLoading={false} />);

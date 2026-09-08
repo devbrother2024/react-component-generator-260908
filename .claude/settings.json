@@ -1,5 +1,70 @@
 {
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun run .claude/hooks/tdd-reminder.ts",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Edit(./.env)",
+      "Edit(./.env.*)",
+      "Edit(**/.env)",
+      "Edit(**/.env.*)",
+      "Read(**/*credential*)",
+      "Read(**/*credential*/**)",
+      "Edit(**/*credential*)",
+      "Edit(**/*credential*/**)",
+      "Read(**/*secret*)",
+      "Read(**/*secret*/**)",
+      "Edit(**/*secret*)",
+      "Edit(**/*secret*/**)",
+      "Bash(cat *.env*)",
+      "Bash(cat *credential*)",
+      "Bash(cat *secret*)",
+      "Bash(less *.env*)",
+      "Bash(less *credential*)",
+      "Bash(less *secret*)",
+      "Bash(more *.env*)",
+      "Bash(more *credential*)",
+      "Bash(more *secret*)",
+      "Bash(head *.env*)",
+      "Bash(head *credential*)",
+      "Bash(head *secret*)",
+      "Bash(tail *.env*)",
+      "Bash(tail *credential*)",
+      "Bash(tail *secret*)",
+      "Bash(vim *.env*)",
+      "Bash(vi *.env*)",
+      "Bash(nano *.env*)",
+      "Bash(cp *.env* *)",
+      "Bash(cp *credential* *)",
+      "Bash(cp *secret* *)",
+      "Bash(mv *.env* *)",
+      "Bash(scp *.env* *)",
+      "Bash(rsync *.env* *)",
+      "PowerShell(Get-Content *.env*)",
+      "PowerShell(Get-Content *credential*)",
+      "PowerShell(Get-Content *secret*)",
+      "PowerShell(type *.env*)",
+      "PowerShell(Select-String *.env*)",
+      "PowerShell(Copy-Item *.env* *)",
+      "PowerShell(Move-Item *.env* *)"
+    ]
   }
 }
